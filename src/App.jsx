@@ -72,12 +72,95 @@ const App = () => {
   useEffect(() => {
     if (usuarios.length > 0) {
       localStorage.setItem("crud-usuarios", JSON.stringify(usuarios));
-
     }
   }, [usuarios]);
 
+  // ========== FUNCIONES DEL COMPONENTE ==========
+
+  // FUNCIÓN: Mostrar alertas temporales
+  // Recibe el mensaje y tipo (success, danger, warning, etc.) utilizamos "success" por defecto, luego puede cambiar
+  const showAlert = (mensaje, tipo = "success") => {
+    // Actualiza el estado para mostrar la alerta
+    setAlert({ show: true, mensaje, tipo });
+    // setTimeout programa una función para ejecutar después de 3 segundos
+    // Esto hace que la alerta se oculte automaticamente
+    setTimeout(() => setAlert({ show: false, mensaje: "", tipo: "" }), 3000);
+  };
+
+  // ========== OPERACIONES CRUD ==========
+
+  // CREATE - Agregar nuevo usuario
+  // Recibe userData (objeto con name, email, phone)
+  const agregarUsuario = (usuarioData) => {
+    // 1. CREAR NUEVO USUARIO OBJETO
+    const nuevoUsuario = {
+      id: Date.now(), // ID único
+      ...usuarioData, // Spread operator: copia todas las propiedades de usuarioData
+    };
+
+    // 2. ACTUALIZAR ESTADO (esto ejecutará el useEffect de guardado automático)
+    // ...usuarios copia todos los usuarios existentes
+    // nuevoUsuario agrega el nuevo usuario al final del array
+    setUsuarios([...usuarios, nuevoUsuario]);
+
+    // 3. MOSTRAR ALERTA
+    showAlert("Usuario creado exitosamente!", "success");
+  };
+
+  // UPDATE - Actualizar usuario existente
+  const actualizarUsuario = (usuarioData) => {
+    // 1. CREAR NUEVO ARRAY CON EL USUARIO ACTUALIZADO
+    // usuarios.map() crea un nuevo array transformando cada elemento
+    const actualizarUsuarios = usuarios.map(
+      (usuario) =>
+        // Si el usuario actual tiene el mismo ID que el que estamos editando
+        usuario.id === editarUsuario.id
+          ? { ...usuario, ...usuarioData } // Combinamos usuario existente con nuevos datos
+          : usuario // Dejamos los otros usuarios sin cambios
+    );
+
+    // 2. ACTUALIZAR ESTADO (ejecuta useEffect de guardado automático)
+    setUsuarios(actualizarUsuarios);
+
+    // 3. SALIR DEL MODO EDICIÓN
+
+    setEditarUsuario(null);
+
+    // 4. MOSTRAR ALERTA
+    showAlert("Usuario actualizado exitosamente!", "info");
+  };
+
+  // DELETE - Eliminar usuario
+  const eliminarUsuario = (usuarioId) => {
+    // 1. FILTRAR EL ARRAY EXCLUYENDO EL USUARIO A ELIMINAR
+    // usuarios.filter() crea nuevo array con usuarios que NO tengan el ID a eliminar
+    const filtroUsuarios = usuarios.filter(
+      (usuario) => usuario.id !== usuarioId
+    );
+
+    // 2. ACTUALIZAR ESTADO (ejecuta useEffect de guardado automático)
+    setUsuarios(filtroUsuarios);
+
+    // 3. Mostramos alerta
+    showAlert("Usuario eliminado exitosamente!", "warning");
+  };
+
+  // INICIAR MODO EDICIÓN
+  const iniciarEdicion = (usuario) => {
+    // Establecemos el usuario que vamos a editar
+    // Esto se pasa a FormUsuario para que llene el formulario con sus datos
+    setEditarUsuario(usuario);
+  };
+
+  // CANCELAR EDICIÓN
+  const cancelarEdicion = () => {
+    // Volvemos a null para indicar que no estamos editando
+    // FormUsuario detecta esto y limpia el formulario
+    setEditarUsuario(null);
+    showAlert("Edición cancelada", "secondary");
+  };
+
   return <></>;
 };
-
 
 export default App;
