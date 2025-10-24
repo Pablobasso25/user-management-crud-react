@@ -31,7 +31,7 @@ const App = () => {
 
   // ESTADO 3: Alerta para mensajes al usuario
   // Objeto con: show (si se muestra), message (texto), type (tipo de alerta)
-  const [alert, setAlert] = useState({ show: false, message: "", type: "" });
+  const [alert, setAlert] = useState({ show: false, mensaje: "", tipo: "" });
 
   // ========== EFFECT PARA CARGAR USUARIOS EN LOCALSTORAGE==========
   useEffect(() => {
@@ -160,7 +160,92 @@ const App = () => {
     showAlert("Edición cancelada", "secondary");
   };
 
-  return <></>;
+  // ========== RENDER DEL COMPONENTE ==========
+
+  // return devuelve el JSX que se va a renderizar en el DOM
+  return (
+    // Fragment <> - permite devolver múltiples elementos sin un div padre
+    <>
+      {/* bg: background color, variant: color del texto, expand: responsive */}
+      <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
+        <Container>
+          {/* Brand: logo o nombre de la app */}
+          <Navbar.Brand href="#">
+            <i className="bi bi-people-fill me-2"></i>
+            Sistema CRUD de Usuarios
+          </Navbar.Brand>
+          {/* Texto adicional en la navbar */}
+          <Navbar.Text>Create, Read, Update, Delete</Navbar.Text>
+        </Container>
+      </Navbar>
+
+      {/* CONTAINER PRINCIPAL */}
+      {/* fluid="md" hace que sea ancho completo hasta breakpoint medium */}
+      <Container fluid="md">
+        {/* ALERT PARA FEEDBACK */}
+        {/* && es conditional rendering - solo renderiza si alert.show es true */}
+        {alert.show && (
+          <Alert
+            variant={alert.type} // Tipo de alerta (success, danger, etc.)
+            dismissible // Permite cerrar la alerta
+            onClose={() => setAlert({ show: false, mensaje: "", tipo: "" })}
+          >
+            {alert.mensaje}
+          </Alert>
+        )}
+
+        {/* g-4: gutter (espacio entre columnas) de 4 unidades */}
+        <Row className="g-4">
+          {/* COL - Columna del formulario (4/12 del ancho en lg) */}
+          <Col lg={4}>
+            {/* CARD - Tarjeta contenedora del formulario */}
+            <Card className="h-100 shadow-sm">
+              {/* CARD HEADER - Encabezado de la tarjeta */}
+              <Card.Header className="bg-primary text-white">
+                <h5 className="mb-0">
+                  <i className="bi bi-person-plus me-2"></i>
+                  {/* Título dinámico según si estamos editando o creando */}
+                  {editarUsuario ? "Editar Usuario" : "Agregar Usuario"}
+                </h5>
+              </Card.Header>
+              {/* CARD BODY - Cuerpo de la tarjeta */}
+              <Card.Body>
+                {/* Componente FormUsuario con props (propiedades) */}
+                <UserForm
+                  onAgregarUsuario={agregarUsuario} // Función para crear usuario
+                  onActualizarUsuario={actualizarUsuario} // Función para actualizar usuario
+                  editarUsuario={editarUsuario} // Usuario en edición (o null)
+                  onCancelarEdicion={cancelarEdicion} // Función para cancelar edición
+                />
+              </Card.Body>
+            </Card>
+          </Col>
+
+          {/* COL - Columna de la lista (8/12 del ancho en lg) */}
+          <Col lg={8}>
+            <Card className="shadow-sm">
+              <Card.Header className="bg-success text-white">
+                <h5 className="mb-0">
+                  <i className="bi bi-list-ul me-2"></i>
+                  {/* Muestra el número actual de usuarios */}
+                  Lista de Usuarios ({usuarios.length})
+                </h5>
+              </Card.Header>
+              <Card.Body>
+                {/* Componente ListaUsuarios con props */}
+                <UserList
+                  usuarios={usuarios} // Array de usuarios
+                  onEditarUsuario={iniciarEdicion} // Función para editar
+                  onEliminarUsuario={eliminarUsuario} // Función para eliminar
+                />
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
 };
 
+// Exporta el componente para poder importarlo en otros archivos
 export default App;
