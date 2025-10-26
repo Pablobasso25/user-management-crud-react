@@ -102,3 +102,79 @@ function FormUsuario({ onAgregarUsuario, onActualizarUsuario, editarUsuario, onC
     // .length === 0 significa que no hay errores
     return Object.keys(newErrors).length === 0;
   };
+
+  // ========== MANEJADOR DE CAMBIOS EN INPUTS ==========
+
+  // Esta función se ejecuta CADA VEZ que el usuario escribe en cualquier input
+  const handleChange = (e) => {
+    // e.target es el elemento HTML que disparó el evento (el input)
+    // Desestructuramos para obtener name y value
+    const { name, value } = e.target;
+    // name = 'name', 'email' o 'phone' (atributo name del input)
+    // value = lo que el usuario está escribiendo
+
+    // Actualizamos el estado formData
+    // Usamos función de actualización para asegurarnos de tener el estado más reciente
+    setFormData((prevData) => ({
+      ...prevData, // Copiamos todos los datos anteriores (spread operator)
+      [name]: value, // Actualizamos SOLO el campo que cambió
+      // [name] es computed property name - si name='email', sería email: value
+    }));
+
+    // LIMPIEZA DE ERRORES EN TIEMPO REAL
+    // Si el campo que está escribiendo tiene un error, lo limpiamos
+    if (errors[name]) {
+      setErrores((prev) => ({
+        ...prev, // Copiamos todos los errores anteriores
+        [name]: "", // Limpiamos SOLO el error del campo actual
+      }));
+    }
+  };
+
+  // ========== MANEJADOR DE ENVÍO DEL FORMULARIO ==========
+
+  // Esta función se ejecuta cuando el usuario envía el formulario (click botón o Enter)
+  const handleSubmit = (e) => {
+    // Prevenimos el comportamiento por defecto del formulario
+    // Que sería recargar la página
+    e.preventDefault();
+
+    // Obtenemos una referencia al elemento form del DOM
+    const form = e.currentTarget;
+
+    // Validación DOBLE:
+    // 1. Validación nativa de HTML5 (form.checkValidity())
+    // 2. Nuestra validación personalizada (validateForm())
+    if (form.checkValidity() === false || !validateForm()) {
+      // Si alguna validación falla:
+      e.stopPropagation(); // Detiene la propagación del evento
+      setValidacion(true); // Muestra los mensajes de error
+      return; // Sale de la función - NO envía el formulario
+    }
+
+    // ========== FORMULARIO VÁLIDO - PROCESAR DATOS ==========
+
+    // Dependiendo de si estamos editando o creando:
+    if (editarUsuario) {
+      // MODO EDICIÓN: Llamamos a la función updateUser del padre (App.jsx)
+      // Le pasamos formData (los nuevos datos del usuario)
+      onActualizarUsuario(formData);
+    } else {
+      // MODO CREACIÓN: Llamamos a la función addUser del padre (App.jsx)
+      // Le pasamos formData (los datos del nuevo usuario)
+      onAgregarUsuario(formData);
+    }
+
+    // ========== LIMPIAR FORMULARIO DESPUÉS DE ENVIAR ==========
+
+    // Restablecemos el formulario a valores vacíos
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+    });
+
+    // Reseteamos los estados de validación
+    setValidacion(false); // Ocultamos mensajes de error
+    setErrores({}); // Limpiamos todos los errores
+  };
