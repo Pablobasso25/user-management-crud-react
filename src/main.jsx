@@ -5,7 +5,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 // Importamos nuestro componente principal App
-import App from "./App.jsx";
+import App from "./App";
 
 // Importamos los estilos CSS de Bootstrap
 // Esto carga TODOS los estilos de Bootstrap globalmente
