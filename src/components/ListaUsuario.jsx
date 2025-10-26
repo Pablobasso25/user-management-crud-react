@@ -31,19 +31,19 @@ function ListaUsuario({ usuarios, onEditarUsuario, onEliminarUsuario }) {
         <Row className="g-3">
           {/* MAP - Transforma el array de usuarios en componentes CardUsuario */}
           {/* usuarios.map() recorre cada usuario y devuelve un nuevo array de componentes */}
-          {usuarios.map((user) => (
+          {usuarios.map((usuario) => (
             // Col para cada CardUsuario - define el layout responsivo
             // key={usuario.id} - IMPORTANTE: React necesita key única para cada elemento en listas
             // xs={12} - En móvil: 12 columnas (ocupa toda la fila)
             // md={6}  - En tablet: 6 columnas (2 por fila)
             // lg={4}  - En desktop: 4 columnas (3 por fila)
-            <Col key={usuarios.id} xs={12} md={6} lg={4}>
+            <Col key={usuario.id} xs={12} md={6} lg={4}>
               {/* Componente CardUsuario individual */}
               {/* Pasamos props al componente CardUsuario: */}
               <CardUsuario
-                usuario={usuarios} // Objeto usuario completo (name, email, phone, id)
-                onEditar={onEditarUsuario} // Función para editar (viene de App.jsx)
-                onEliminar={onEliminarUsuario} // Función para eliminar (viene de App.jsx)
+                usuario={usuario} // Objeto usuario completo (name, email, phone, id)
+                onEditarUsuario={onEditarUsuario} // Función para editar (viene de App.jsx)
+                onEliminarUsuario={onEliminarUsuario} // Función para eliminar (viene de App.jsx)
               />
             </Col>
           ))}

@@ -73,7 +73,7 @@ function FormUsuario({
 
   // Función que valida todos los campos del formulario
   // Retorna true si todo es válido, false si hay errores
-  const validacionForm = () => {
+  const validateForm = () => {
     // Creamos un objeto vacío para guardar los errores
     const newErrors = {};
 
@@ -128,7 +128,7 @@ function FormUsuario({
 
     // LIMPIEZA DE ERRORES EN TIEMPO REAL
     // Si el campo que está escribiendo tiene un error, lo limpiamos
-    if (errors[name]) {
+    if (errores[name]) {
       setErrores((prev) => ({
         ...prev, // Copiamos todos los errores anteriores
         [name]: "", // Limpiamos SOLO el error del campo actual
@@ -192,7 +192,7 @@ function FormUsuario({
     // noValidate: desactiva validación nativa del navegador (usamos la nuestra)
     // validated: controla si mostrar mensajes de error de Bootstrap
     // onSubmit: función que se ejecuta al enviar el formulario
-    <Form noValidate validacion={validacion} onSubmit={handleSubmit}>
+    <Form noValidate validated={validacion} onSubmit={handleSubmit}>
       {/* g-3: gutter (espacio entre columnas) de 3 unidades */}
       <Row className="g-3">
         {/* ========== CAMPO NOMBRE ========== */}
@@ -210,13 +210,13 @@ function FormUsuario({
               onChange={handleChange} // Se ejecuta con cada tecla presionada
               placeholder="Ej: Juan Pérez" // Texto placeholder
               required // Campo obligatorio (HTML5 validation)
-              isInvalid={!!error.name} // Si hay error, muestra estilo de error
+              isInvalid={!!errores.name} // Si hay error, muestra estilo de error
               // !! convierte el valor a booleano:
               // errors.name = string → true, errors.name = '' → false
             />
             {/* Mensaje de error que se muestra si el campo es inválido */}
             <Form.Control.Feedback type="invalid">
-              {errors.name}{" "}
+              {errores.name}{" "}
               {/* Muestra el mensaje de error del estado errors */}
             </Form.Control.Feedback>
           </Form.Group>
@@ -233,10 +233,10 @@ function FormUsuario({
               onChange={handleChange}
               placeholder="Ej: usuario@email.com"
               required
-              isInvalid={!!errors.email}
+              isInvalid={!!errores.email}
             />
             <Form.Control.Feedback type="invalid">
-              {errors.email}
+              {errores.email}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
