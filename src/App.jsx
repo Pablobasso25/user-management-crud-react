@@ -211,7 +211,7 @@ const App = () => {
               {/* CARD BODY - Cuerpo de la tarjeta */}
               <Card.Body>
                 {/* Componente FormUsuario con props (propiedades) */}
-                <UserForm
+                <FormUsuario
                   onAgregarUsuario={agregarUsuario} // Función para crear usuario
                   onActualizarUsuario={actualizarUsuario} // Función para actualizar usuario
                   editarUsuario={editarUsuario} // Usuario en edición (o null)
@@ -233,7 +233,7 @@ const App = () => {
               </Card.Header>
               <Card.Body>
                 {/* Componente ListaUsuarios con props */}
-                <UserList
+                <ListaUsuario
                   usuarios={usuarios} // Array de usuarios
                   onEditarUsuario={iniciarEdicion} // Función para editar
                   onEliminarUsuario={eliminarUsuario} // Función para eliminar

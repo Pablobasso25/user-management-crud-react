@@ -300,4 +300,4 @@ function FormUsuario({
 }
 
 // Exportamos el componente para poder importarlo en App.jsx
-export default UserForm;
+export default FormUsuario;

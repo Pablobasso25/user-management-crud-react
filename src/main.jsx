@@ -11,7 +11,6 @@ import App from "./App.jsx";
 // Esto carga TODOS los estilos de Bootstrap globalmente
 import "bootstrap/dist/css/bootstrap.min.css";
 
-// Importamos nuestros estilos personalizados (si los tenemos)
 import "./App.css";
 
 // Creamos el punto de entrada de nuestra aplicación
@@ -21,7 +20,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode> es un componente que ayuda a detectar problemas
   // durante el desarrollo - no afecta el build de producción
   <React.StrictMode>
-    {/* Aquí renderizamos nuestro componente principal App */}
     <App />
   </React.StrictMode>
 );
