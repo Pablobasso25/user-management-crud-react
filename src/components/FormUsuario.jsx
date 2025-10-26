@@ -1,4 +1,4 @@
-// UserForm 
+// UserForm
 
 // Importamos React y los Hooks que necesitamos
 // useState: para manejar el estado del formulario
@@ -15,7 +15,12 @@ import { Form, Button, Row, Col, Alert } from "react-bootstrap";
 // Definimos el componente UserForm que recibe props (propiedades) del componente padre (App.jsx)
 // { onAddUser, onUpdateUser, editingUser, onCancelEdit } - esto se llama DESTRUCTURACIÓN
 // En lugar de usar props.onAddUser, directamente tenemos la variable onAddUser
-function FormUsuario({ onAgregarUsuario, onActualizarUsuario, editarUsuario, onCancelarEdicion }) {
+function FormUsuario({
+  onAgregarUsuario,
+  onActualizarUsuario,
+  editarUsuario,
+  onCancelarEdicion,
+}) {
   // ========== ESTADOS INTERNOS DEL FORMULARIO ==========
 
   // ESTADO 1: Datos del formulario
@@ -178,3 +183,121 @@ function FormUsuario({ onAgregarUsuario, onActualizarUsuario, editarUsuario, onC
     setValidacion(false); // Ocultamos mensajes de error
     setErrores({}); // Limpiamos todos los errores
   };
+
+  // ========== RENDER DEL COMPONENTE ==========
+
+  // Retornamos el JSX que se va a renderizar
+  return (
+    // Form de React Bootstrap
+    // noValidate: desactiva validación nativa del navegador (usamos la nuestra)
+    // validated: controla si mostrar mensajes de error de Bootstrap
+    // onSubmit: función que se ejecuta al enviar el formulario
+    <Form noValidate validacion={validacion} onSubmit={handleSubmit}>
+      {/* g-3: gutter (espacio entre columnas) de 3 unidades */}
+      <Row className="g-3">
+        {/* ========== CAMPO NOMBRE ========== */}
+        <Col md={12}>
+          {" "}
+          {/* Ocupa 12 columnas (ancho completo) en dispositivos medium */}
+          <Form.Group>
+            {" "}
+            {/* Grupo de formulario para agrupar label + input + feedback */}
+            <Form.Label>Nombre completo</Form.Label> {/* Label del campo */}
+            <Form.Control
+              type="text" // Tipo de input
+              name="name" // Nombre del campo (importante para handleChange)
+              value={formData.name} // Valor controlado por React
+              onChange={handleChange} // Se ejecuta con cada tecla presionada
+              placeholder="Ej: Juan Pérez" // Texto placeholder
+              required // Campo obligatorio (HTML5 validation)
+              isInvalid={!!error.name} // Si hay error, muestra estilo de error
+              // !! convierte el valor a booleano:
+              // errors.name = string → true, errors.name = '' → false
+            />
+            {/* Mensaje de error que se muestra si el campo es inválido */}
+            <Form.Control.Feedback type="invalid">
+              {errors.name}{" "}
+              {/* Muestra el mensaje de error del estado errors */}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+
+        {/* ========== CAMPO EMAIL ========== */}
+        <Col md={12}>
+          <Form.Group>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email" // Tipo email para validación nativa
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Ej: usuario@email.com"
+              required
+              isInvalid={!!errors.email}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.email}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+
+        {/* ========== CAMPO TELÉFONO ========== */}
+        <Col md={12}>
+          <Form.Group>
+            <Form.Label>Teléfono</Form.Label>
+            <Form.Control
+              type="tel" // Tipo tel para dispositivos móviles
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Ej: 123-456-7890"
+              required
+              isInvalid={!!errores.phone}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errores.phone}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+
+        {/* ========== BOTONES DEL FORMULARIO ========== */}
+        <Col md={12}>
+          {/* Contenedor flexible para los botones */}
+          <div className="d-grid gap-2 d-md-flex">
+            {/* BOTÓN PRINCIPAL (Submit) */}
+            <Button
+              variant={editarUsuario ? "warning" : "primary"} // Color: warning (naranja) si edita, primary (azul) si crea
+              type="submit" // Tipo submit para enviar el formulario
+              className="me-2" // Margin right de 2 unidades
+            >
+              {/* Ícono dinámico según el modo */}
+              <i
+                className={`bi ${
+                  editarUsuario ? "bi-check-circle" : "bi-person-plus"
+                } me-2`}
+              ></i>
+              {/* Texto dinámico según el modo */}
+              {editarUsuario ? "Actualizar Usuario" : "Agregar Usuario"}
+            </Button>
+
+            {/* BOTÓN CANCELAR - solo visible en modo edición */}
+            {/* && es conditional rendering - solo se renderiza si editingUser es true */}
+            {editarUsuario && (
+              <Button
+                variant="secondary" // Color gris
+                onClick={onCancelarEdicion} // Llama a la función del padre para cancelar
+                type="button" // Tipo button para que no envíe el formulario
+              >
+                <i className="bi bi-x-circle me-2"></i>
+                Cancelar
+              </Button>
+            )}
+          </div>
+        </Col>
+      </Row>
+    </Form>
+  );
+}
+
+// Exportamos el componente para poder importarlo en App.jsx
+export default UserForm;
